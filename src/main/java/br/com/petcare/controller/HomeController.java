@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.petcare.model.Pet;
 import br.com.petcare.model.agendamento;
 import br.com.petcare.repository.PetRepository;
+import br.com.petcare.service.AgendamentoService;
 
 @Controller
 @RequestMapping("/cliente") 
@@ -21,12 +23,15 @@ public class HomeController {
     @Autowired
     private PetRepository petRepository;
 
+    // CORRIGIDO: Agora a variável agendamentoService foi declarada corretamente
+    @Autowired
+    private AgendamentoService agendamentoService;
+
     @GetMapping("/dashboard")
     public String dashboard() {
         return "dashboard";
     }
 
-    // DINÂMICO: Método antigo duplicado removido! Esse agora busca direto do banco
     @GetMapping("/meus-pets")
     public String listarMeusPets(Model model) {
         List<Pet> listaDoBanco = petRepository.findByNomeTutor("Maira Luiza");
@@ -35,7 +40,10 @@ public class HomeController {
     }
 
     @GetMapping("/meus-agendamentos")
-    public String meusAgendamentos() {
+    public String meusAgendamentos(Model model) {
+        // CORRIGIDO: Alterado de 'AgendamentoService' para 'agendamentoService' (minúsculo)
+        List<agendamento> listaAgendamentos = agendamentoService.listarPorTutor("Maira Luiza");
+        model.addAttribute("agendamentos", listaAgendamentos);
         return "meus-agendamentos";
     }
 
@@ -45,9 +53,11 @@ public class HomeController {
         return "agendamento";
     }
 
+    // APROVEITADO: Já adicionei o salvamento real aqui também para persistir o agendamento no banco!
     @PostMapping("/agendamento")
     public String processarAgendamento(@ModelAttribute("agendamento") agendamento agendamento) {
-        System.out.println("Formulário de agendamento recebido com sucesso!");
+        agendamento.setNomeTutor("Maira Luiza");
+        agendamentoService.salvar(agendamento);
         return "redirect:/cliente/meus-agendamentos?sucesso";
     }
 
@@ -56,7 +66,6 @@ public class HomeController {
         return "cadastrar-pet"; 
     }
 
-    // ADICIONADO: Esse método faltava para receber os dados do formulário e salvar no banco
     @PostMapping("/meus-pets/salvar")
     public String salvarNovoPet(Pet novoPet) {
         if (novoPet.getNomeTutor() == null || novoPet.getNomeTutor().isEmpty()) {
@@ -67,11 +76,8 @@ public class HomeController {
     }
 
     @GetMapping("/meus-pets/excluir/{id}")
-public String excluirPet(@org.springframework.web.bind.annotation.PathVariable("id") Long id) {
-    // Deleta o pet do PostgreSQL usando o ID que veio na URL
-    petRepository.deleteById(id);
-    
-    // Redireciona de volta para a listagem atualizada
-    return "redirect:/cliente/meus-pets";
-}
+    public String excluirPet(@PathVariable("id") Long id) {
+        petRepository.deleteById(id);
+        return "redirect:/cliente/meus-pets";
+    }
 }
