@@ -148,6 +148,15 @@
         <p><strong>Espécie:</strong> <span th:text="${pet.tipoPet}">Cachorro</span></p>
         <p><strong>Raça:</strong> <span th:text="${pet.raca}">SRD</span></p>
         <p><strong>Porte:</strong> <span th:text="${pet.porte}">Médio</span></p>
+
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end;">
+    <a th:href="@{/cliente/meus-pets/excluir/{id}(id=${pet.id})}" 
+       onclick="return confirm('Tem certeza que deseja remover este pet?');"
+       style="display: inline-flex; align-items: center; gap: 6px; color: #dc2626; background-color: #fef2f2; text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 8px 14px; border-radius: 8px; border: 1px solid #fee2e2; transition: all 0.2s ease; cursor: pointer;">
+       <span style="font-size: 1rem;">🗑</span> Excluir Pet
+    </a>
+</div>
+
     </div>
 
 </div>

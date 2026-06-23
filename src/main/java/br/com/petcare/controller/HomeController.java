@@ -10,19 +10,27 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import br.com.petcare.model.Pet;
 import br.com.petcare.model.agendamento;
+import br.com.petcare.repository.PetRepository;
 
 @Controller
 @RequestMapping("/cliente") 
 public class HomeController {
+
+    @Autowired
+    private PetRepository petRepository;
 
     @GetMapping("/dashboard")
     public String dashboard() {
         return "dashboard";
     }
 
+    // DINÂMICO: Método antigo duplicado removido! Esse agora busca direto do banco
     @GetMapping("/meus-pets")
-    public String meusPets() {
+    public String listarMeusPets(Model model) {
+        List<Pet> listaDoBanco = petRepository.findByNomeTutor("Maira Luiza");
+        model.addAttribute("meusPets", listaDoBanco);
         return "meus-pets";
     }
 
@@ -39,32 +47,31 @@ public class HomeController {
 
     @PostMapping("/agendamento")
     public String processarAgendamento(@ModelAttribute("agendamento") agendamento agendamento) {
-        
         System.out.println("Formulário de agendamento recebido com sucesso!");
-        
         return "redirect:/cliente/meus-agendamentos?sucesso";
     }
 
     @GetMapping("/cadastrar-pet")
-public String exibirFormularioPet() {
-    // Isso vai carregar o arquivo cadastrar-pet.html da sua pasta templates
-    return "cadastrar-pet"; 
-}
+    public String exibirFormularioPet() {
+        return "cadastrar-pet"; 
+    }
 
-@Autowired
-private br.com.petcare.repository.PetRepository petRepository;
+    // ADICIONADO: Esse método faltava para receber os dados do formulário e salvar no banco
+    @PostMapping("/meus-pets/salvar")
+    public String salvarNovoPet(Pet novoPet) {
+        if (novoPet.getNomeTutor() == null || novoPet.getNomeTutor().isEmpty()) {
+            novoPet.setNomeTutor("Maira Luiza"); 
+        }
+        petRepository.save(novoPet);
+        return "redirect:/cliente/meus-pets";
+    }
 
-@GetMapping("/meus-pets")
-public String listarMeusPets(Model model) {
-    // 1. Busca no banco todos os pets cadastrados para a Maira
-    List<br.com.petcare.model.Pet> listaDoBanco = petRepository.findByNomeTutor("Maira Luiza");
+    @GetMapping("/meus-pets/excluir/{id}")
+public String excluirPet(@org.springframework.web.bind.annotation.PathVariable("id") Long id) {
+    // Deleta o pet do PostgreSQL usando o ID que veio na URL
+    petRepository.deleteById(id);
     
-    // 2. Envia essa lista real para o HTML do Thymeleaf
-    model.addAttribute("meusPets", listaDoBanco);
-    
-    // 3. Abre o arquivo meus-pets.html
-    return "meus-pets";
+    // Redireciona de volta para a listagem atualizada
+    return "redirect:/cliente/meus-pets";
 }
-
 }
-
