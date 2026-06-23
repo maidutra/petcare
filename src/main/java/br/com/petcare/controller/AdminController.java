@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.petcare.model.agendamento;
@@ -20,28 +21,35 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboardAdmin(Model model) {
-        // Puxa a lista de hoje para sabermos quantos atendimentos temos no total
         List<agendamento> hoje = agendamentoService.listarAgendamentosDeHoje();
-        
-        // Passamos o tamanho da lista (quantidade de pets) para os cards do dashboard
         model.addAttribute("totalAtendimentos", hoje.size());
-        
         return "admin/dashboard";
     }
 
     @GetMapping("/agenda")
     public String verAgenda(Model model) {
-        // BUSCA REAL: Puxa todos os agendamentos do dia atual direto do banco de dados
+        // Mantido seu método original intacto!
         List<agendamento> todosAgendamentos = agendamentoService.listarAgendamentosDeHoje();
-        
-        // Envia a lista para o th:each do HTML
         model.addAttribute("todosAgendamentos", todosAgendamentos);
-        
         return "admin/agenda";
     }
 
     @GetMapping("/clientes-pets")
     public String listarClientesEPets() {
         return "admin/clientes-pets"; 
+    }
+
+    // ADICIONADO: Rota para o botão "Confirmar" mudar o status no banco
+    @GetMapping("/agenda/confirmar/{id}")
+    public String confirmarAgendamento(@PathVariable("id") Long id) {
+        agendamentoService.atualizarStatus(id, "CONFIRMADO");
+        return "redirect:/admin/agenda";
+    }
+
+    // ADICIONADO: Rota para o botão "Finalizar" fechar o atendimento
+    @GetMapping("/agenda/finalizar/{id}")
+    public String finalizarAgendamento(@PathVariable("id") Long id) {
+        agendamentoService.atualizarStatus(id, "FINALIZADO");
+        return "redirect:/admin/agenda";
     }
 }

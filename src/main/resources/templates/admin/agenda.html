@@ -17,7 +17,7 @@
         body { background-color: var(--bg-admin); color: #334155; display: flex; min-height: 100vh; }
 
         /* Sidebar Admin */
-        aside { width: 260px; background-color: var(--admin-dark); color: white; padding: 30px 20px; }
+        aside { width: 260px; background-color: var(--admin-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; justify-content: space-between; }
         aside h2 { color: var(--accent-yellow); margin-bottom: 40px; text-align: center; font-size: 1.4rem; }
         .nav-links { display: flex; flex-direction: column; gap: 10px; }
         .nav-links a { color: #cbd5e1; text-decoration: none; padding: 12px; border-radius: 8px; transition: all 0.3s; }
@@ -45,34 +45,51 @@
         .pet-details h3 { color: #1e293b; font-size: 1.1rem; }
         .pet-details p { font-size: 0.85rem; color: #64748b; }
         
-        /* Select de Status */
-        .status-select { padding: 6px 12px; border-radius: 20px; border: 1px solid #cbd5e1; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
-        .status-pendente { background-color: #fef3c7; color: #d97706; }
-        .status-progresso { background-color: #dbeafe; color: #2563eb; }
-        .status-concluido { background-color: #dcfce7; color: #16a34a; }
+        /* Badges de Status */
+        .status-select { padding: 6px 12px; border-radius: 20px; border: 1px solid #cbd5e1; font-weight: 600; font-size: 0.85rem; display: inline-block; }
+        .status-pendente { background-color: #fef3c7; color: #d97706; border-color: #fde68a; }
+        .status-progresso { background-color: #dbeafe; color: #2563eb; border-color: #bfdbfe; }
+        .status-concluido { background-color: #dcfce7; color: #16a34a; border-color: #bbf7d0; }
+
+        /* Botões de Ação */
+        .btn-action {
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-start { background-color: var(--admin-purple); color: white; }
+        .btn-start:hover { background-color: #3b2a96; }
+        .btn-finish { background-color: #16a34a; color: white; }
+        .btn-finish:hover { background-color: #118039; }
     </style>
 </head>
 <body>
 
     <aside>
-    <div>
-        <h2>PetCare <span>Admin 🛠️</span></h2>
-        <nav class="nav-links">
-            <a th:href="@{/admin/dashboard}">📈 Visão Geral</a>
-            <a th:href="@{/admin/agenda}" class="active">📅 Agenda do Dia</a>
-            <a th:href="@{/admin/clientes-pets}">🐾 Clientes & Pets</a>
-        </nav>
-    </div>
-    
-    <a href="#" 
-       class="btn-logout" 
-       onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"
-       style="background-color: #ff7675; color: white; text-decoration: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; display: block;">
-        🚪 Sair do Painel
-    </a>
-    
-    <form id="admin-logout-form" th:action="@{/logout}" method="POST" style="display: none;"></form>
-</aside>
+        <div>
+            <h2>PetCare <span>Admin 🛠️</span></h2>
+            <nav class="nav-links">
+                <a th:href="@{/admin/dashboard}">📈 Visão Geral</a>
+                <a th:href="@{/admin/agenda}" class="active">📅 Agenda do Dia</a>
+                <a th:href="@{/admin/clientes-pets}">🐾 Clientes & Pets</a>
+            </nav>
+        </div>
+        
+        <div>
+            <a href="#" 
+               class="btn-logout" 
+               onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"
+               style="background-color: #ff7675; color: white; text-decoration: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; display: block;">
+               🚪 Sair do Painel
+            </a>
+            <form id="admin-logout-form" th:action="@{/logout}" method="POST" style="display: none;"></form>
+        </div>
+    </aside>
 
     <main>
         <div class="header-admin">
@@ -87,9 +104,9 @@
             <div class="col-sidebar">
                 <div class="card-admin">
                     <h3 style="margin-bottom: 15px; color: var(--admin-dark);">Resumo de Hoje</h3>
-                    <p style="margin-bottom: 8px;">⏳ Pendentes: <strong>3</strong></p>
-                    <p style="margin-bottom: 8px;">🧼 No Banho: <strong>1</strong></p>
-                    <p>✅ Concluídos: <strong>5</strong></p>
+                    <p style="margin-bottom: 8px;">⏳ Agendados: <strong th:text="${#lists.size(todosAgendamentos.?[status == 'PENDENTE'])}">0</strong></p>
+                    <p style="margin-bottom: 8px;">🧼 No Banho: <strong th:text="${#lists.size(todosAgendamentos.?[status == 'CONFIRMADO'])}">0</strong></p>
+                    <p>✅ Concluídos: <strong th:text="${#lists.size(todosAgendamentos.?[status == 'FINALIZADO'])}">0</strong></p>
                 </div>
             </div>
 
@@ -106,17 +123,31 @@
                         <p><strong>Tutor:</strong> <span th:text="${agenda.nomeTutor}">Maira</span> - <span th:text="${agenda.telefone}">(61) 99999-9999</span></p>
                     </div>
 
-                    <div>
-                        <select class="status-select status-pendente">
-                            <option value="pendente" selected>Agendado</option>
-                            <option value="progresso">Em Andamento</option>
-                            <option value="concluido">Concluído / Retirado</option>
-                        </select>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span th:if="${agenda.status == 'PENDENTE'}" class="status-select status-pendente">⏳ Agendado</span>
+                        <span th:if="${agenda.status == 'CONFIRMADO'}" class="status-select status-progresso">🧼 No Banho</span>
+                        <span th:if="${agenda.status == 'FINALIZADO'}" class="status-select status-concluido">✅ Concluído</span>
+
+                        <div>
+                            <a th:if="${agenda.status == 'PENDENTE'}" 
+                               th:href="@{/admin/agenda/confirmar/{id}(id=${agenda.id})}" 
+                               class="btn-action btn-start">
+                               Iniciar 🧼
+                            </a>
+                            
+                            <a th:if="${agenda.status == 'CONFIRMADO'}" 
+                               th:href="@{/admin/agenda/finalizar/{id}(id=${agenda.id})}" 
+                               class="btn-action btn-finish">
+                               Finalizar 🏁
+                            </a>
+                            
+                            <span th:if="${agenda.status == 'FINALIZADO'}" style="color: #cbd5e1; font-weight: bold;">-</span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="card-admin" th:if="${#lists.isEmpty(todosAgendamentos)}" style="text-align: center; padding: 40px; color: #64748b;">
-                    <p style="font-size: 1.2rem;">Nenhum pet agendado para esta data! </p>
+                    <p style="font-size: 1.2rem;">Nenhum pet agendado para esta data! 🐾</p>
                 </div>
             </div>
         </div>
