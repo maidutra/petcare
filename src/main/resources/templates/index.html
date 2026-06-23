@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PetCare - Banho e Tosa</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}">
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div th:replace="fragments/header :: header"></div>
+
+<main>
+
+    <section class="hero">
+
+        <div class="hero-text">
+
+            <h1>
+                Cuidamos do seu pet
+                <span> com carinho</span> ♡
+            </h1>
+
+            <p class="hero-subtitulo">
+
+                Banho e tosa com qualidade,
+                segurança e muito amor para cães e gatos.
+
+            </p>
+
+            <div class="hero-action">
+
+    <a th:href="@{/cliente/agendamento}"
+       class="btn-agendar-roxo">
+
+        📅 AGENDAR BANHO / TOSA
+
+    </a>
+
+            </div>
+
+        </div>
+
+        <div class="hero-img-container">
+
+            <img th:src="@{/img/hero-dog-cat.png}"
+                 alt="Pets PetCare"
+                 class="hero-pets">
+
+        </div>
+
+    </section>
+
+    <section class="services">
+
+        <div class="services-header">
+
+            <h2>
+
+                <img th:src="@{/img/patinha-bg-purple.png}"
+                     alt=""
+                     style="width:30px; vertical-align:middle;">
+
+                Nossos serviços
+
+            </h2>
+
+        </div>
+
+        <div class="service-grid">
+
+            <div class="card">
+
+                <div class="icon-circle">
+
+                    <img th:src="@{/img/icon-banho-cao.png}"
+                         alt="Banho Cães">
+
+                </div>
+
+                <h3>Banho Cães</h3>
+
+                <p>
+                    Higiene completa com produtos de qualidade.
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <div class="icon-circle">
+
+                    <img th:src="@{/img/icon-banho-gato.png}"
+                         alt="Banho Gatos">
+
+                </div>
+
+                <h3>Banho Gatos</h3>
+
+                <p>
+                    Banho especial para gatos com todo cuidado.
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <div class="icon-circle">
+
+                    <img th:src="@{/img/icon-tosa-higienica.png}"
+                         alt="Tosa Higiênica">
+
+                </div>
+
+                <h3>Tosa Higiênica</h3>
+
+                <p>
+                    Tosa das patinhas e higiene em geral.
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <div class="icon-circle">
+
+                    <img th:src="@{/img/icon-tosa-completa.png}"
+                         alt="Tosa Completa">
+
+                </div>
+
+                <h3>Tosa Completa</h3>
+
+                <p>
+                    O estilo que seu pet merece.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- FOOTER -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

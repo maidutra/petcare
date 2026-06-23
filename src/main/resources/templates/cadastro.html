@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - PetCare</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="auth-page">
+        <div class="auth-card">
+            <h2>Criar <span>Conta</span></h2>
+            <p>Junte-se à família PetCare!</p>
+
+            <form th:action="@{/cadastro}" th:object="${usuario}" method="POST">
+                
+                <div class="form-group">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" th:field="*{nome}" placeholder="Seu nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" th:field="*{email}" placeholder="exemplo@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" th:field="*{senha}" placeholder="Crie uma senha forte" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pet_nome">Nome do seu Pet</label>
+                    <input type="text" id="pet_nome" name="petNome" placeholder="Como ele se chama?">
+                </div>
+
+                <button type="submit" class="btn-agendar-roxo" style="width: 100%; margin-top: 20px;">
+                    CADASTRAR AGORA
+                </button>
+            </form> 
+
+            <div class="auth-footer">
+                <p>Já tem uma conta? <a th:href="@{/login}">Faça login</a></p>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

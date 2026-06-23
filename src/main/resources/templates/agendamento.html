@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare - Agendamento</title>
+    <style>
+        :root {
+            --primary-purple: #6c5ce7;
+            --secondary-purple: #a29bfe;
+            --accent-yellow: #fdcb6e;
+            --bg-light: #f9f9fb;
+            --text-dark: #2d3436;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+
+        body { background-color: var(--bg-light); color: var(--text-dark); padding: 20px; }
+
+        .container { max-width: 800px; margin: 20px auto; }
+
+        header { text-align: center; margin-bottom: 30px; }
+        header h1 { color: var(--primary-purple); font-size: 2rem; }
+        header h1 span { color: var(--accent-yellow); }
+
+        .form-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.1);
+        }
+
+        .section-title {
+            color: var(--primary-purple);
+            margin: 20px 0 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--bg-light);
+            padding-bottom: 5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
+        .full-width { grid-column: span 2; }
+
+        label { font-weight: 600; font-size: 0.9rem; color: #555; }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-back { display: block; text-align: center; margin-top: 20px; color: var(--primary-purple); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>PetCare <span>Agendamento</span> ♡</h1>
+            <p>Reserve o melhor momento para o seu pet.</p>
+        </header>
+
+        <main class="form-card">
+            <form th:action="@{/cliente/agendamento}" method="POST">
+                
+                <h2 class="section-title">🐾 Dados do Pet</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nomePet">Nome do Pet</label>
+                        <input type="text" id="nomePet" name="nomePet" placeholder="Ex: Thor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoPet">Espécie</label>
+                        <select id="tipoPet" name="tipoPet" required>
+                            <option value="cao">Cão</option>
+                            <option value="gato">Gato</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h2 class="section-title">📅 Serviço e Horário</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="servico">Serviço Desejado</label>
+                        <select id="servico" name="servico" required>
+                            <option value="banho">Banho</option>
+                            <option value="tosa">Tosa</option>
+                            <option value="completo">Combo Completo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="data">Data</label>
+                        <input type="date" id="data" name="data" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horario">Horário</label>
+                        <input type="time" id="horario" name="horario" required>
+                    </div>
+                </div>
+
+                <h2 class="section-title">👤 Contato</h2>
+                <div class="form-group">
+                    <label for="nomeTutor">Seu Nome</label>
+                    <input type="text" id="nomeTutor" name="nomeTutor" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefone">WhatsApp</label>
+                    <input type="tel" id="telefone" name="telefone" placeholder="(61) 99999-9999" required>
+                </div>
+
+                <button type="submit" class="btn-submit">CONFIRMAR AGENDAMENTO</button>
+            </form>
+        </main>
+
+        <a th:href="@{/}" class="btn-back">← Voltar para o início</a>
+    </div>
+
+</body>
+</html>

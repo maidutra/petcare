@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare Admin - Controle de Agenda</title>
+    <style>
+        :root {
+            --admin-purple: #4a36b5;
+            --admin-dark: #1e1b4b;
+            --bg-admin: #f8fafc;
+            --accent-yellow: #fdcb6e;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-admin); color: #334155; display: flex; min-height: 100vh; }
+
+        /* Sidebar Admin */
+        aside { width: 260px; background-color: var(--admin-dark); color: white; padding: 30px 20px; }
+        aside h2 { color: var(--accent-yellow); margin-bottom: 40px; text-align: center; font-size: 1.4rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 10px; }
+        .nav-links a { color: #cbd5e1; text-decoration: none; padding: 12px; border-radius: 8px; transition: all 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background-color: var(--admin-purple); color: white; font-weight: bold; }
+
+        /* Conteúdo Principal */
+        main { flex: 1; padding: 40px; }
+        .header-admin { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header-admin h1 { color: var(--admin-dark); }
+
+        /* Layout em Duas Colunas (Filtros/Calendário + Lista) */
+        .agenda-container { display: flex; gap: 30px; }
+        .col-sidebar { width: 300px; display: flex; flex-direction: column; gap: 20px; }
+        .col-main { flex: 1; }
+
+        .card-admin { background: var(--white); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+        
+        /* Lista de Horários */
+        .agenda-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px; background: white; border-radius: 12px; margin-bottom: 12px;
+            border-left: 5px solid var(--admin-purple); box-shadow: 0 2px 4px rgb(0 0 0 / 0.02);
+        }
+        .time-box { font-size: 1.2rem; font-weight: bold; color: var(--admin-dark); min-width: 70px; }
+        .pet-details h3 { color: #1e293b; font-size: 1.1rem; }
+        .pet-details p { font-size: 0.85rem; color: #64748b; }
+        
+        /* Select de Status */
+        .status-select { padding: 6px 12px; border-radius: 20px; border: 1px solid #cbd5e1; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+        .status-pendente { background-color: #fef3c7; color: #d97706; }
+        .status-progresso { background-color: #dbeafe; color: #2563eb; }
+        .status-concluido { background-color: #dcfce7; color: #16a34a; }
+    </style>
+</head>
+<body>
+
+    <aside>
+    <div>
+        <h2>PetCare <span>Admin 🛠️</span></h2>
+        <nav class="nav-links">
+            <a th:href="@{/admin/dashboard}">📈 Visão Geral</a>
+            <a th:href="@{/admin/agenda}" class="active">📅 Agenda do Dia</a>
+            <a th:href="@{/admin/clientes-pets}">🐾 Clientes & Pets</a>
+        </nav>
+    </div>
+    
+    <a href="#" 
+       class="btn-logout" 
+       onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"
+       style="background-color: #ff7675; color: white; text-decoration: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; display: block;">
+        🚪 Sair do Painel
+    </a>
+    
+    <form id="admin-logout-form" th:action="@{/logout}" method="POST" style="display: none;"></form>
+</aside>
+
+    <main>
+        <div class="header-admin">
+            <div>
+                <h1>Controle da Agenda 🗓️</h1>
+                <p>Gerencie a fila de serviços e horários do petshop.</p>
+            </div>
+            <input type="date" class="status-select" style="font-size: 1rem; padding: 10px;" th:value="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+        </div>
+
+        <div class="agenda-container">
+            <div class="col-sidebar">
+                <div class="card-admin">
+                    <h3 style="margin-bottom: 15px; color: var(--admin-dark);">Resumo de Hoje</h3>
+                    <p style="margin-bottom: 8px;">⏳ Pendentes: <strong>3</strong></p>
+                    <p style="margin-bottom: 8px;">🧼 No Banho: <strong>1</strong></p>
+                    <p>✅ Concluídos: <strong>5</strong></p>
+                </div>
+            </div>
+
+            <div class="col-main">
+                <div th:each="agenda : ${todosAgendamentos}" class="agenda-item">
+                    <div class="time-box" th:text="${agenda.horario}">09:00</div>
+                    
+                    <div class="pet-details">
+                        <h3>
+                            <span th:text="${agenda.nomePet}">Thor</span> 
+                            <span style="font-weight: normal; font-size: 0.9rem;" th:text="'(' + ${agenda.tipoPet} + ')'">(Cão)</span>
+                        </h3>
+                        <p><strong>Serviço:</strong> <span th:text="${agenda.servico}">Banho e Tosa</span></p>
+                        <p><strong>Tutor:</strong> <span th:text="${agenda.nomeTutor}">Maira</span> - <span th:text="${agenda.telefone}">(61) 99999-9999</span></p>
+                    </div>
+
+                    <div>
+                        <select class="status-select status-pendente">
+                            <option value="pendente" selected>Agendado</option>
+                            <option value="progresso">Em Andamento</option>
+                            <option value="concluido">Concluído / Retirado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-admin" th:if="${#lists.isEmpty(todosAgendamentos)}" style="text-align: center; padding: 40px; color: #64748b;">
+                    <p style="font-size: 1.2rem;">Nenhum pet agendado para esta data! </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

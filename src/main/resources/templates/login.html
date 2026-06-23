@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PetCare</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="auth-page">
+        <div class="auth-card">
+            <h2>Entrar no <span>PetCare</span></h2>
+            <p>Bem-vindo de volta! Sentimos sua falta.</p>
+
+            <div th:if="${param.error}" class="alert alert-danger" style="color: #ff4d4d; margin-bottom: 15px; font-weight: bold;">
+                E-mail ou senha inválidos.
+            </div>
+            
+            <div th:if="${param.logout}" class="alert alert-info" style="color: #6a1b9a; margin-bottom: 15px;">
+                Você saiu com sucesso.
+            </div>
+
+            <form th:action="@{/login}" method="POST">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="username" placeholder="Seu e-mail cadastrado" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="password" placeholder="Sua senha" required>
+                    <a th:href="@{/recuperar-senha}" class="forgot-password">Esqueceu a senha?</a>
+                </div>
+
+                <button type="submit" class="btn-agendar-roxo" style="width: 100%; margin-top: 10px;">
+                    ENTRAR AGORA
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Ainda não tem uma conta? <a th:href="@{/cadastro}">Crie uma aqui</a></p>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

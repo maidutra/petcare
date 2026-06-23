@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare Admin - Dashboard</title>
+    <style>
+        :root {
+            --admin-purple: #4a36b5;
+            --admin-dark: #1e1b4b;
+            --bg-admin: #f8fafc;
+            --accent-yellow: #fdcb6e;
+            --white: #ffffff;
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-admin); color: #334155; display: flex; min-height: 100vh; }
+
+        /* Sidebar Admin */
+        aside { width: 260px; background-color: var(--admin-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; justify-content: space-between; }
+        aside h2 { color: var(--accent-yellow); margin-bottom: 40px; text-align: center; font-size: 1.4rem; }
+        .nav-links { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .nav-links a { color: #cbd5e1; text-decoration: none; padding: 12px; border-radius: 8px; transition: all 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background-color: var(--admin-purple); color: white; font-weight: bold; }
+        .btn-logout { background-color: #ff7675; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+
+        /* Conteúdo Principal */
+        main { flex: 1; padding: 40px; }
+        .header-admin { margin-bottom: 30px; }
+        .header-admin h1 { color: var(--admin-dark); }
+
+        /* Grid de Estatísticas (Cards) */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .metric-card { background: var(--white); padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); display: flex; flex-direction: column; gap: 10px; }
+        .metric-card span { font-size: 0.9rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
+        .metric-card h2 { font-size: 2rem; color: var(--admin-dark); }
+        .metric-card .trend { font-size: 0.85rem; color: var(--success); font-weight: bold; }
+
+        /* Seção de Alertas e Atividades */
+        .dashboard-sections { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        .panel { background: var(--white); padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+        .panel h3 { color: var(--admin-dark); margin-bottom: 20px; font-size: 1.2rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+
+        /* Itens de Atividade Recente */
+        .activity-list { display: flex; flex-direction: column; gap: 15px; }
+        .activity-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px dashed #e2e8f0; }
+        .activity-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+
+    <aside>
+    <div>
+        <h2>PetCare <span>Admin 🛠️</span></h2>
+        <nav class="nav-links">
+            <a th:href="@{/admin/dashboard}" class="active">📈 Visão Geral</a>
+            <a th:href="@{/admin/agenda}">📅 Agenda do Dia</a>
+            <a th:href="@{/admin/clientes-pets}">🐾 Clientes & Pets</a>
+        </nav>
+    </div>
+    
+    <a href="#" 
+       class="btn-logout" 
+       onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"
+       style="background-color: #ff7675; color: white; text-decoration: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; display: block;">
+        🚪 Sair do Painel
+    </a>
+    
+    <form id="admin-logout-form" th:action="@{/logout}" method="POST" style="display: none;"></form>
+</aside>
+
+    <main>
+        <div class="header-admin">
+            <h1>Visão Geral do Negócio 📈</h1>
+            <p>Acompanhe os números e o desempenho do petshop em tempo real.</p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card" style="border-top: 4px solid var(--admin-purple);">
+                <span>Previsão de Faturamento</span>
+                <h2>R$ 1.250,00</h2>
+                <p class="trend">▲ 12% em relação a ontem</p>
+            </div>
+            <div class="metric-card" style="border-top: 4px solid var(--accent-yellow);">
+    <span>Atendimentos Hoje</span>
+    <h2 th:text="${totalAtendimentos} + ' Pets'">0 Pets</h2>
+    <p style="font-size: 0.85rem; color: #64748b;">Puxados direto do sistema</p>
+            </div>
+            <div class="metric-card" style="border-top: 4px solid var(--success);">
+                <span>Novos Clientes (Mês)</span>
+                <h2>+24</h2>
+                <p class="trend">▲ 8% acima da meta</p>
+            </div>
+        </div>
+
+        <div class="dashboard-sections" style="display: flex; flex-wrap: wrap; gap: 30px;">
+            <div class="panel" style="flex: 2; min-width: 350px;">
+                <h3>🧼 Próximos Atendimentos da Fila</h3>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div>
+                            <strong>Thor (Cão)</strong> - <span style="color:#64748b">Banho Completo</span>
+                        </div>
+                        <span style="font-weight: bold; color: var(--admin-purple)">10:30</span>
+                    </div>
+                    <div class="activity-item">
+                        <div>
+                            <strong>Mel (Gato)</strong> - <span style="color:#64748b">Tosa Higiênica</span>
+                        </div>
+                        <span style="font-weight: bold; color: var(--admin-purple)">11:15</span>
+                    </div>
+                    <div class="activity-item">
+                        <div>
+                            <strong>Luna (Cão)</strong> - <span style="color:#64748b">Combo Completo</span>
+                        </div>
+                        <span style="font-weight: bold; color: var(--admin-purple)">14:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" style="flex: 1; min-width: 250px; background-color: #fffbeb; border: 1px solid #fef3c7;">
+                <h3 style="color: #b45309; border-bottom-color: #fde68a;">⚠️ Lembretes da Equipe</h3>
+                <ul style="padding-left: 20px; font-size: 0.9rem; line-height: 1.6; color: #92400e;">
+                    <li>Checar estoque de shampoo hipoalergênico.</li>
+                    <li>Manutenção da secadora da sala 2 agendada para as 16h.</li>
+                    <li>Ligar para o tutor do Thor confirmar atraso.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

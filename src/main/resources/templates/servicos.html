@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços - PetCare</title>
+    <!-- O th:href gerencia automaticamente o caminho a partir da pasta static -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Substitui o include do PHP pelo fragmento do Thymeleaf -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="servicos-container">
+        <section class="servicos-hero">
+            <h1>Nossos <span>Serviços</span></h1>
+            <p>Oferecemos o melhor cuidado para quem você mais ama.</p>
+        </section>
+
+        <section class="lista-detalhada">
+            <!-- Serviço 1 -->
+            <div class="servico-item">
+                <div class="servico-icon">
+                    <img th:src="@{/img/icon-banho-cao.png}" alt="Banho Cães">
+                </div>
+                <div class="servico-info">
+                    <h2>Banho Completo (Cães)</h2>
+                    <p>Inclui corte de unhas, limpeza de ouvidos e perfumes hipoalergénicos. Utilizamos água em temperatura controlada para o maior conforto do seu pet.</p>
+                    <span class="preco">A partir de R$ 50,00</span>
+                    <a th:href="@{/cliente/agendamento}" class="btn-agendar-servico">Agendar este serviço</a>
+                </div>
+            </div>
+
+            <!-- Serviço 2 -->
+            <div class="servico-item inv">
+                <div class="servico-info">
+                    <h2>Banho Especial (Gatos)</h2>
+                    <p>Sabemos que gatos precisam de paciência. Temos profissionais especializados em felinos para um banho calmo e sem stress.</p>
+                    <span class="preco">A partir de R$ 65,00</span>
+                    <a th:href="@{/cliente/agendamento}" class="btn-agendar-servico">Agendar este serviço</a>
+                </div>
+                <div class="servico-icon">
+                    <img th:src="@{/img/icon-banho-gato.png}" alt="Banho Gatos">
+                </div>
+            </div>
+
+            <!-- Serviço 3 -->
+            <div class="servico-item">
+                <div class="servico-icon">
+                    <img th:src="@{/img/icon-tosa-higienica.png}" alt="Tosa Higiénica">
+                </div>
+                <div class="servico-info">
+                    <h2>Tosa Higiénica</h2>
+                    <p>Focada na saúde e limpeza, removemos o excesso de pêlo nas patinhas, barriga e áreas íntimas para evitar sujidade e nós.</p>
+                    <span class="preco">A partir de R$ 40,00</span>
+                    <a th:href="@{/cliente/agendamento}" class="btn-agendar-servico">Agendar este serviço</a>
+                </div>
+            </div>
+
+            <!-- Serviço 4 -->
+            <div class="servico-item inv">
+                <div class="servico-info">
+                    <h2>Tosa Completa (Máquina ou Tesoura)</h2>
+                    <p>A tosa ideal para manter o estilo do seu pet ou aliviar o calor. Fazemos tosa padrão da raça ou conforme a sua preferência.</p>
+                    <span class="preco">A partir de R$ 80,00</span>
+                    <a th:href="@{/cliente/agendamento}" class="btn-agendar-servico">Agendar este serviço</a>
+                </div>
+                <div class="servico-icon">
+                    <img th:src="@{/img/icon-tosa-completa.png}" alt="Tosa Completa">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Substitui o footer do PHP -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

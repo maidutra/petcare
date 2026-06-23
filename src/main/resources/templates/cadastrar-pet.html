@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare - Cadastrar Novo Pet</title>
+    <style>
+        :root {
+            --primary-purple: #6c5ce7;
+            --secondary-purple: #a29bfe;
+            --accent-yellow: #fdcb6e;
+            --bg-light: #f9f9fb;
+            --text-dark: #2d3436;
+            --white: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); display: flex; min-height: 100vh; }
+        
+        .dashboard-container { display: flex; width: 100%; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; background-color: var(--primary-purple); color: white; padding: 30px 20px; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar h2 { font-size: 1.5rem; margin-bottom: 30px; text-align: center; }
+        .sidebar h2 span { color: var(--accent-yellow); }
+        .menu-links { display: flex; flex-direction: column; gap: 15px; }
+        .menu-links a { color: white; text-decoration: none; padding: 12px 15px; border-radius: 10px; transition: background 0.3s; }
+        .menu-links a:hover, .menu-links a.active { background-color: var(--secondary-purple); font-weight: bold; }
+        .btn-logout { background-color: #ff7675; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        /* Formulário */
+        .main-content { flex: 1; padding: 40px; }
+        .form-container { background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.02); max-width: 600px; margin-top: 20px; }
+        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-weight: 600; color: var(--primary-purple); }
+        .form-group input, .form-group select { padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; }
+        
+        .btn-salvar { background-color: var(--primary-purple); color: white; border: none; padding: 12px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1rem; width: 100%; margin-top: 10px; }
+        .btn-salvar:hover { background-color: #5b4cc4; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="top-side">
+                <h2>PetCare <span>♡</span></h2>
+                <nav class="menu-links">
+                    <a th:href="@{/cliente/dashboard}">📊 Dashboard</a>
+                    <a th:href="@{/cliente/agendamento}">📅 Novo Agendamento</a>
+                    <a th:href="@{/cliente/meus-agendamentos}">📋 Meus Agendamentos</a>
+                    <a th:href="@{/cliente/meus-pets}" class="active">🐾 Meus Pets</a>
+                </nav>
+            </div>
+            <form th:action="@{/logout}" method="POST" style="display: grid;">
+                <button type="submit" class="btn-logout">Sair / Logout</button>
+            </form>
+        </aside>
+
+       <main class="main-content">
+    <h1>Cadastrar Novo Pet 🐾</h1>
+    <p>Insira as informações do seu companheiro.</p>
+
+    <div class="form-container">
+        <form th:action="@{/meus-pets/salvar}" method="POST">
+            
+            <div class="form-group">
+                <label for="nomePet">Nome do Pet:</label>
+                <input type="text" id="nomePet" name="nomePet" required placeholder="Ex: Thor">
+            </div>
+
+            <div class="form-group">
+                <label for="tipoPet">Espécie:</label>
+                <select id="tipoPet" name="tipoPet" required>
+                    <option value="cao">Cachorro</option>
+                    <option value="gato">Gato</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="raca">Raça:</label>
+                <input type="text" id="raca" name="raca" required placeholder="Ex: Golden Retriever, SRD">
+            </div>
+
+            <div class="form-group">
+                <label for="porte">Porte:</label>
+                <select id="porte" name="porte" required>
+                    <option value="Pequeno">Pequeno</option>
+                    <option value="Médio">Medio</option>
+                    <option value="Grande">Grande</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-salvar">Salvar Pet</button>
+        </form>
+    </div>
+</main>
+
+    </div>
+
+</body>
+</html>

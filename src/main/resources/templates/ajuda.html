@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como Funciona - PetCare</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Fragmento do Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="como-funciona-page">
+        <section class="page-header">
+            <h1>É simples cuidar do seu <span>Pet</span></h1>
+            <p>Saiba como funciona o nosso processo de agendamento e atendimento.</p>
+        </section>
+
+        <section class="passos-container">
+            <!-- Passo 1 -->
+            <div class="passo-card">
+                <div class="passo-numero">1</div>
+                <div class="passo-icon">
+                    <!-- Caminho atualizado para o padrão Spring -->
+                    <img th:src="@{/img/patinha-bg-purple.png}" alt="Passo 1" style="width: 50px;">
+                </div>
+                <h3>Escolha o Serviço</h3>
+                <p>Navegue pela nossa lista de serviços e escolha entre banho, tosa ou pacotes combinados.</p>
+            </div>
+
+            <!-- Passo 2 -->
+            <div class="passo-card">
+                <div class="passo-numero">2</div>
+                <div class="passo-icon">
+                    <span>📅</span>
+                </div>
+                <h3>Agende o Horário</h3>
+                <p>Selecione o dia e a hora que melhor funcionam para si. O nosso sistema mostra apenas horários reais disponíveis.</p>
+            </div>
+
+            <!-- Passo 3 -->
+            <div class="passo-card">
+                <div class="passo-numero">3</div>
+                <div class="passo-icon">
+                    <span>🚗</span>
+                </div>
+                <h3>Entrega ou Busca</h3>
+                <p>Você pode optar por trazer o seu pet até nós ou solicitar que <strong>busquemos ele na sua residência</strong> com o nosso Táxi-Dog.</p>
+            </div>
+
+            <!-- Passo 4 -->
+            <div class="passo-card">
+                <div class="passo-numero">4</div>
+                <div class="passo-icon">
+                    <span>✨</span>
+                </div>
+                <h3>Pet Feliz</h3>
+                <p>Após o serviço, o seu pet sai limpo e relaxado. Avisaremos quando ele estiver pronto para ser entregue ou retirado!</p>
+            </div>
+        </section>
+
+        <section class="cta-ajuda">
+            <div class="cta-content">
+                <h2>Pronto para começar?</h2>
+                <p>Dê ao seu pet o tratamento que ele merece.</p>
+                <br>
+                <!-- Link atualizado para a rota de agendamento -->
+                <a th:href="@{/cliente/agendamento}" class="btn-agendar-roxo">
+                    📅 AGENDAR AGORA
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Fragmento do Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

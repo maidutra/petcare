@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PetCare Admin - Clientes & Pets</title>
+    <style>
+        :root { --admin-purple: #4a36b5; --admin-dark: #1e1b4b; --bg-admin: #f8fafc; --accent-yellow: #fdcb6e; --white: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-admin); color: #334155; display: flex; min-height: 100vh; }
+        aside { width: 260px; background-color: var(--admin-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; justify-content: space-between; }
+        .nav-links { display: flex; flex-direction: column; gap: 10px; }
+        .nav-links a { color: #cbd5e1; text-decoration: none; padding: 12px; border-radius: 8px; }
+        .nav-links a.active { background-color: var(--admin-purple); color: white; font-weight: bold; }
+        main { flex: 1; padding: 40px; }
+        .card-table { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { color: var(--admin-purple); }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div>
+            <h2>PetCare <span>Admin 🛠️</span></h2>
+            <nav class="nav-links">
+                <a th:href="@{/admin/dashboard}">📈 Visão Geral</a>
+                <a th:href="@{/admin/agenda}">📅 Agenda do Dia</a>
+                <a th:href="@{/admin/clientes-pets}" class="active">🐾 Clientes & Pets</a>
+            </nav>
+        </div>
+        <form th:action="@{/logout}" method="POST">
+            <button type="submit" style="background-color: #ff7675; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold;">🚪 Sair do Painel</button>
+        </form>
+    </aside>
+
+    <main>
+        <h1>Clientes e Pets Cadastrados 🐾</h1>
+        <p>Gerenciamento da base de dados do petshop.</p>
+        
+        <br>
+        <div class="card-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tutor (Cliente)</th>
+                        <th>WhatsApp</th>
+                        <th>Nome do Pet</th>
+                        <th>Espécie/Raça</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Maira Luiza</strong></td>
+                        <td>(61) 99999-9999</td>
+                        <td>Thor</td>
+                        <td>🐶 Cão (Vira-lata)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+</body>
+</html>

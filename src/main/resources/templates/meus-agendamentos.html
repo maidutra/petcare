@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare - Meus Agendamentos</title>
+    <style>
+        :root {
+            --primary-purple: #6c5ce7;
+            --secondary-purple: #a29bfe;
+            --accent-yellow: #fdcb6e;
+            --bg-light: #f9f9fb;
+            --text-dark: #2d3436;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); }
+
+        .dashboard-container { display: flex; min-height: 100vh; }
+        
+        /* Sidebar (Mantendo o padrão) */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-purple);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sidebar h2 { font-size: 1.5rem; margin-bottom: 30px; text-align: center; }
+        .sidebar h2 span { color: var(--accent-yellow); }
+        .menu-links { display: flex; flex-direction: column; gap: 15px; }
+        .menu-links a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+        .menu-links a:hover { background-color: var(--secondary-purple); }
+        .menu-links a.active { background-color: var(--secondary-purple); font-weight: bold; }
+        .btn-logout { background-color: #ff7675; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        /* Conteúdo */
+        .main-content { flex: 1; padding: 40px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .page-header h1 { color: var(--primary-purple); }
+        
+        .btn-new-agenda {
+            background-color: var(--primary-purple);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);
+        }
+
+        /* Tabela / Lista de Agendamentos */
+        .table-container {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f1f5;
+        }
+
+        th {
+            color: var(--primary-purple);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            font-size: 0.95rem;
+        }
+
+        .badge-servico {
+            background-color: #f0edf2;
+            color: var(--primary-purple);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: capitalize;
+        }
+
+        .status-confirmado {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        /* Alerta caso não tenha agendamentos */
+        .no-agendas {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 20px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="top-side">
+                <h2>PetCare <span>♡</span></h2>
+                <nav class="menu-links">
+                    <a th:href="@{/cliente/dashboard}">📊 Dashboard</a>
+                    <a th:href="@{/cliente/agendamento}">📅 Novo Agendamento</a>
+                    <a th:href="@{/cliente/meus-agendamentos}" class="active">📋 Meus Agendamentos</a>
+                    <a th:href="@{/cliente/meus-pets}">🐾 Meus Pets</a>
+                </nav>
+            </div>
+            
+            <form id="logout-form" th:action="@{/logout}" method="POST" style="display: grid;">
+                <button type="submit" class="btn-logout">Sair / Logout</button>
+            </form>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1>Meus Agendamentos 📋</h1>
+                    <p>Acompanhe os horários reservados para os seus pets.</p>
+                </div>
+                <a th:href="@{/cliente/agendamento}" class="btn-new-agenda">+ Novo Agendamento</a>
+            </div>
+
+            <div class="table-container" th:if="${!#lists.isEmpty(listaAgendamentos)}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pet</th>
+                            <th>Serviço</th>
+                            <th>Data</th>
+                            <th>Horário</th>
+                            <th>Contato</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="agenda : ${listaAgendamentos}">
+                            <td style="font-weight: 600;" th:text="${agenda.nomePet}">Thor</td>
+                            <td><span class="badge-servico" th:text="${agenda.servico}">Banho</span></td>
+                            <td th:text="${agenda.data}">12/05/2026</td>
+                            <td th:text="${agenda.horario}">14:30</td>
+                            <td th:text="${agenda.telefone}">(61) 99999-9999</td>
+                            <td class="status-confirmado">✨ Confirmado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="no-agendas" th:if="${#lists.isEmpty(listaAgendamentos)}">
+                <p style="font-size: 1.2rem; margin-bottom: 10px;">Nenhum serviço agendado para os próximos dias. 📅</p>
+                <p>Precisa de um trato no visual do seu pet? Clique no botão acima para agendar!</p>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
