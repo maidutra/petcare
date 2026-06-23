@@ -19,7 +19,7 @@
 
         .dashboard-container { display: flex; min-height: 100vh; }
         
-        /* Sidebar (Mantendo o padrão) */
+        /* Sidebar */
         .sidebar {
             width: 260px;
             background-color: var(--primary-purple);
@@ -60,7 +60,7 @@
             box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);
         }
 
-        /* Tabela / Lista de Agendamentos */
+        /* Tabela */
         .table-container {
             background: var(--white);
             border-radius: 20px;
@@ -88,9 +88,7 @@
             letter-spacing: 0.5px;
         }
 
-        td {
-            font-size: 0.95rem;
-        }
+        td { font-size: 0.95rem; }
 
         .badge-servico {
             background-color: #f0edf2;
@@ -107,7 +105,6 @@
             font-weight: bold;
         }
 
-        /* Alerta caso não tenha agendamentos */
         .no-agendas {
             background: white;
             padding: 40px;
@@ -145,7 +142,11 @@
                 <a th:href="@{/cliente/agendamento}" class="btn-new-agenda">+ Novo Agendamento</a>
             </div>
 
-            <div class="table-container" th:if="${!#lists.isEmpty(listaAgendamentos)}">
+            <div th:if="${param.sucesso}" style="background-color: #d1fae5; color: #065f46; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-weight: bold; border: 1px solid #bbf7d0;">
+                🎉 Agendamento realizado com sucesso! Seu horário já está reservado.
+            </div>
+
+            <div class="table-container" th:if="${!#lists.isEmpty(agendamentos)}">
                 <table>
                     <thead>
                         <tr>
@@ -158,19 +159,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="agenda : ${listaAgendamentos}">
+                        <tr th:each="agenda : ${agendamentos}">
                             <td style="font-weight: 600;" th:text="${agenda.nomePet}">Thor</td>
                             <td><span class="badge-servico" th:text="${agenda.servico}">Banho</span></td>
                             <td th:text="${agenda.data}">12/05/2026</td>
                             <td th:text="${agenda.horario}">14:30</td>
                             <td th:text="${agenda.telefone}">(61) 99999-9999</td>
-                            <td class="status-confirmado">✨ Confirmado</td>
+                            <td>
+                                <span class="status-confirmado" 
+                                      th:text="${agenda.status == 'PENDENTE' ? '⏳ Pendente' : '✨ Confirmado'}">✨ Confirmado</span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="no-agendas" th:if="${#lists.isEmpty(listaAgendamentos)}">
+            <div class="no-agendas" th:if="${#lists.isEmpty(agendamentos)}">
                 <p style="font-size: 1.2rem; margin-bottom: 10px;">Nenhum serviço agendado para os próximos dias. 📅</p>
                 <p>Precisa de um trato no visual do seu pet? Clique no botão acima para agendar!</p>
             </div>
