@@ -86,7 +86,7 @@
                class="btn-logout" 
                onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"
                style="background-color: #ff7675; color: white; text-decoration: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; display: block;">
-               🚪 Sair do Painel
+                🚪 Sair do Painel
             </a>
             <form id="admin-logout-form" th:action="@{/logout}" method="POST" style="display: none;"></form>
         </div>
@@ -122,6 +122,12 @@
                         </h3>
                         <p><strong>Serviço:</strong> <span th:text="${agenda.servico}">Banho e Tosa</span></p>
                         <p><strong>Tutor:</strong> <span th:text="${agenda.nomeTutor}">Maira</span> - <span th:text="${agenda.telefone}">(61) 99999-9999</span></p>
+                        
+                        <div th:if="${agenda.tipoEntrega == 'TAXI'}" 
+                             style="margin-top: 8px; padding: 10px; background-color: #fffbeb; border-left: 4px solid #d97706; border-radius: 6px; font-size: 0.85rem; color: #b45309; font-weight: 500;">
+                            🚖 **SERVIÇO DE TAXIDOG ATIVO** <br>
+                            📍 Buscar em: <span th:text="${agenda.enderecoTaxi}">Endereço não preenchido</span>
+                        </div>
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 15px;">
@@ -133,13 +139,13 @@
                             <a th:if="${agenda.status == 'PENDENTE'}" 
                                th:href="@{/admin/agenda/confirmar/{id}(id=${agenda.id})}" 
                                class="btn-action btn-start">
-                               Iniciar 🧼
+                                Iniciar 🧼
                             </a>
                             
                             <a th:if="${agenda.status == 'CONFIRMADO'}" 
                                th:href="@{/admin/agenda/finalizar/{id}(id=${agenda.id})}" 
                                class="btn-action btn-finish">
-                               Finalizar 🏁
+                                Finalizar 🏁
                             </a>
                             
                             <span th:if="${agenda.status == 'FINALIZADO'}" style="color: #cbd5e1; font-weight: bold;">-</span>
