@@ -1,6 +1,10 @@
 package br.com.petcare.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,4 +23,7 @@ public class Usuario {
     private String email;
 
     private String senha;
+
+    // ADICIONADO: Esse campo vai guardar se o usuário é "CLIENTE" ou "ADMIN"
+    private String role; 
 }

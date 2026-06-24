@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PetCare Admin - Histórico Geral</title>
+    <style>
+        :root { --admin-purple: #4a36b5; --admin-dark: #1e1b4b; --bg-admin: #f8fafc; --accent-yellow: #fdcb6e; --white: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-admin); color: #334155; display: flex; min-height: 100vh; }
+        aside { width: 260px; background-color: var(--admin-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; justify-content: space-between; }
+        .nav-links { display: flex; flex-direction: column; gap: 10px; }
+        .nav-links a { color: #cbd5e1; text-decoration: none; padding: 12px; border-radius: 8px; }
+        .nav-links a.active { background-color: var(--admin-purple); color: white; font-weight: bold; }
+        main { flex: 1; padding: 40px; }
+        .card-table { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { color: var(--admin-purple); }
+        
+        .badge { padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem; }
+        .badge-pendente { background-color: #fef3c7; color: #d97706; }
+        .badge-progresso { background-color: #dbeafe; color: #2563eb; }
+        .badge-concluido { background-color: #dcfce7; color: #16a34a; }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div>
+            <h2>PetCare <span>Admin 🛠️</span></h2>
+            <nav class="nav-links">
+                <a th:href="@{/admin/dashboard}">📈 Visão Geral</a>
+                <a th:href="@{/admin/agenda}">📅 Agenda do Dia</a>
+                <a th:href="@{/admin/clientes-pets}">🐾 Clientes & Pets</a>
+                <a th:href="@{/admin/historico}" class="active">📜 Histórico Geral</a>
+            </nav>
+        </div>
+        <form th:action="@{/logout}" method="POST">
+            <button type="submit" style="background-color: #ff7675; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold;">🚪 Sair do Painel</button>
+        </form>
+    </aside>
+
+    <main>
+        <h1>Histórico Geral de Agendamentos 📜</h1>
+        <p>Visão global de todos os serviços prestados, agendados ou em andamento.</p>
+        
+        <br>
+        <div class="card-table">
+            <table th:if="${!#lists.isEmpty(historicoAgendamentos)}">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Pet (Espécie)</th>
+                        <th>Serviço</th>
+                        <th>Tutor (Contato)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="agenda : ${historicoAgendamentos}">
+                        <td th:text="${agenda.data}">2026-06-24</td>
+                        <td th:text="${agenda.horario}">09:00</td>
+                        <td>
+                            <span th:text="${agenda.nomePet}">Thor</span> 
+                            <small style="color: #64748b;" th:text="'(' + ${agenda.tipoPet} + ')'">(Cão)</small>
+                        </td>
+                        <td th:text="${agenda.servico}">Banho</td>
+                        <td>
+                            <span th:text="${agenda.nomeTutor}">Maira</span> <br>
+                            <small style="color: #64748b;" th:text="${agenda.telefone}">(61) 99999-9999</small>
+                        </td>
+                        <td>
+                            <span th:if="${agenda.status == 'PENDENTE'}" class="badge badge-pendente">⏳ Agendado</span>
+                            <span th:if="${agenda.status == 'CONFIRMADO'}" class="badge badge-progresso">🧼 No Banho</span>
+                            <span th:if="${agenda.status == 'FINALIZADO'}" class="badge badge-concluido">✅ Concluído</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${#lists.isEmpty(historicoAgendamentos)}" style="text-align: center; padding: 30px; color: #64748b;">
+                <p style="font-size: 1.1rem;">Nenhum agendamento registrado no histórico ainda! 🐾</p>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

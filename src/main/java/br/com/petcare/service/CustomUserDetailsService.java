@@ -1,8 +1,7 @@
 package br.com.petcare.service;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +23,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o e-mail: " + email));
 
-        // Retorna um objeto User do Spring Security com as credenciais do banco
-        return new User(usuario.getEmail(), usuario.getSenha(), new ArrayList<>());
+        // CORRIGIDO: Se a role no banco for null por segurança, assume CLIENTE por padrão
+        String perfil = usuario.getRole() != null ? usuario.getRole() : "CLIENTE";
+
+        // Retorna o objeto User contendo as credenciais e a Role correta do banco de dados (ex: ROLE_CLIENTE)
+        return new User(
+            usuario.getEmail(), 
+            usuario.getSenha(), 
+            AuthorityUtils.createAuthorityList("ROLE_" + perfil)
+        );
     }
 }

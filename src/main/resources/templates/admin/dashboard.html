@@ -51,24 +51,25 @@
 <body>
 
     <aside>
-    <div>
-        <h2>PetCare <span>Admin 🛠️</span></h2>
-        <nav class="nav-links">
-            <a th:href="@{/admin/dashboard}" class="active">📈 Visão Geral</a>
-            <a th:href="@{/admin/agenda}">📅 Agenda do Dia</a>
-            <a th:href="@{/admin/clientes-pets}">🐾 Clientes & Pets</a>
-        </nav>
-    </div>
-    
-    <a href="#" 
-       class="btn-logout" 
-       onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"
-       style="background-color: #ff7675; color: white; text-decoration: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; display: block;">
-        🚪 Sair do Painel
-    </a>
-    
-    <form id="admin-logout-form" th:action="@{/logout}" method="POST" style="display: none;"></form>
-</aside>
+        <div>
+            <h2>PetCare <span>Admin 🛠️</span></h2>
+            <nav class="nav-links">
+                <a th:href="@{/admin/dashboard}" class="active">📈 Visão Geral</a>
+                <a th:href="@{/admin/agenda}">📅 Agenda do Dia</a>
+                <a th:href="@{/admin/clientes-pets}">🐾 Clientes & Pets</a>
+                <a th:href="@{/admin/historico}">📜 Histórico Geral</a>
+            </nav>
+        </div>
+        
+        <a href="#" 
+           class="btn-logout" 
+           onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"
+           style="background-color: #ff7675; color: white; text-decoration: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; display: block;">
+            🚪 Sair do Painel
+        </a>
+        
+        <form id="admin-logout-form" th:action="@{/logout}" method="POST" style="display: none;"></form>
+    </aside>
 
     <main>
         <div class="header-admin">
@@ -79,18 +80,20 @@
         <div class="metrics-grid">
             <div class="metric-card" style="border-top: 4px solid var(--admin-purple);">
                 <span>Previsão de Faturamento</span>
-                <h2>R$ 1.250,00</h2>
-                <p class="trend">▲ 12% em relação a ontem</p>
+                <h2 th:text="'R$ ' + ${#numbers.formatDecimal(faturamento, 1, 2, 'POINT')}">R$ 0,00</h2>
+                <p class="trend">▲ Calculado hoje</p>
             </div>
+            
             <div class="metric-card" style="border-top: 4px solid var(--accent-yellow);">
-    <span>Atendimentos Hoje</span>
-    <h2 th:text="${totalAtendimentos} + ' Pets'">0 Pets</h2>
-    <p style="font-size: 0.85rem; color: #64748b;">Puxados direto do sistema</p>
+                <span>Atendimentos Hoje</span>
+                <h2 th:text="${totalAtendimentos} + ' Pets'">0 Pets</h2>
+                <p style="font-size: 0.85rem; color: #64748b;">Puxados direto do sistema</p>
             </div>
+            
             <div class="metric-card" style="border-top: 4px solid var(--success);">
-                <span>Novos Clientes (Mês)</span>
-                <h2>+24</h2>
-                <p class="trend">▲ 8% acima da meta</p>
+                <span>Total de Clientes</span>
+                <h2 th:text="${novosClientes} + ' Cadastrados'">0 Cadastrados</h2>
+                <p style="font-size: 0.85rem; color: #64748b;">Pets ativos na base de dados</p>
             </div>
         </div>
 
@@ -98,24 +101,20 @@
             <div class="panel" style="flex: 2; min-width: 350px;">
                 <h3>🧼 Próximos Atendimentos da Fila</h3>
                 <div class="activity-list">
-                    <div class="activity-item">
+                    
+                    <div class="activity-item" th:each="agenda : ${proximosAtendimentos}">
                         <div>
-                            <strong>Thor (Cão)</strong> - <span style="color:#64748b">Banho Completo</span>
+                            <strong th:text="${agenda.nomePet}">Thor</strong> 
+                            <small th:text="'(' + ${agenda.tipoPet} + ')'">(Cão)</small> - 
+                            <span style="color:#64748b" th:text="${agenda.servico}">Banho</span>
                         </div>
-                        <span style="font-weight: bold; color: var(--admin-purple)">10:30</span>
+                        <span style="font-weight: bold; color: var(--admin-purple)" th:text="${agenda.horario}">10:30</span>
                     </div>
-                    <div class="activity-item">
-                        <div>
-                            <strong>Mel (Gato)</strong> - <span style="color:#64748b">Tosa Higiênica</span>
-                        </div>
-                        <span style="font-weight: bold; color: var(--admin-purple)">11:15</span>
+                    
+                    <div th:if="${#lists.isEmpty(proximosAtendimentos)}" style="text-align: center; padding: 20px; color: #64748b;">
+                        Nenhum pet aguardando na fila hoje! 🎉
                     </div>
-                    <div class="activity-item">
-                        <div>
-                            <strong>Luna (Cão)</strong> - <span style="color:#64748b">Combo Completo</span>
-                        </div>
-                        <span style="font-weight: bold; color: var(--admin-purple)">14:00</span>
-                    </div>
+                    
                 </div>
             </div>
 
@@ -124,7 +123,7 @@
                 <ul style="padding-left: 20px; font-size: 0.9rem; line-height: 1.6; color: #92400e;">
                     <li>Checar estoque de shampoo hipoalergênico.</li>
                     <li>Manutenção da secadora da sala 2 agendada para as 16h.</li>
-                    <li>Ligar para o tutor do Thor confirmar atraso.</li>
+                    <li>Ligar para tutores com status pendente confirmarem presença.</li>
                 </ul>
             </div>
         </div>

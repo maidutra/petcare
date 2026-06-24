@@ -1,49 +1,35 @@
 package br.com.petcare.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private CustomSuccessHandler successHandler; // ADICIONADO: Injeta o redirecionador inteligente
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
             .authorizeHttpRequests(auth -> auth
-                // Libera arquivos estáticos
-                .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
-
-                // Libera páginas públicas
-                .requestMatchers(
-                        "/", 
-                        "/contato", 
-                        "/servicos", 
-                        "/como-funciona", 
-                        "/ajuda",
-                        "/login", 
-                        "/cadastro", 
-                        "/recuperar-senha"
-                ).permitAll()
-
-                // PROTEGE a área do cliente
-                .requestMatchers("/cliente/**").authenticated() 
-
-                // PROTEGE a área administrativa do Petshop 🛠️
-                .requestMatchers("/admin/**").authenticated()
-
-                // Qualquer outra rota precisa de login
+                .requestMatchers("/css/**", "/js/**", "/img/**", "/images/**").permitAll()
+                .requestMatchers("/", "/contato", "/servicos", "/como-funciona", "/ajuda", "/login", "/cadastro", "/recuperar-senha").permitAll()
+                .requestMatchers("/cliente/**").hasRole("CLIENTE") 
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                // Por enquanto, mantém o redirecionamento padrão. 
-                // (Mais para frente podemos fazer um código que joga o admin para /admin/agenda e o cliente para o dashboard)
-                .defaultSuccessUrl("/cliente/dashboard", true) 
+                .successHandler(successHandler) // MODIFICADO: Agora usa o redirecionador automático
                 .failureUrl("/login?error=true")
                 .permitAll()
             )

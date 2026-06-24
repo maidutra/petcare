@@ -72,6 +72,14 @@
 
         .btn-back { display: block; text-align: center; margin-top: 20px; color: var(--primary-purple); text-decoration: none; }
     </style>
+    
+    <script>
+        function atualizarEspecie() {
+            var selectPet = document.getElementById("nomePet");
+            var especieSelecionada = selectPet.options[selectPet.selectedIndex].getAttribute("data-especie");
+            document.getElementById("tipoPet").value = especieSelecionada ? especieSelecionada : '';
+        }
+    </script>
 </head>
 <body>
 
@@ -85,18 +93,27 @@
             <form th:action="@{/cliente/agendamento}" method="POST">
                 
                 <h2 class="section-title">🐾 Dados do Pet</h2>
-                <div class="form-grid">
+                
+                <div class="form-grid" th:if="${!#lists.isEmpty(meusPets)}">
                     <div class="form-group">
-                        <label for="nomePet">Nome do Pet</label>
-                        <input type="text" id="nomePet" name="nomePet" placeholder="Ex: Thor" required>
+                        <label for="nomePet">Selecione seu Pet</label>
+                        <select id="nomePet" name="nomePet" onchange="atualizarEspecie()" required>
+                            <option value="" disabled selected>-- Escolha um pet --</option>
+                            <option th:each="pet : ${meusPets}" 
+                                    th:value="${pet.nomePet}"
+                                    th:data-especie="${pet.tipoPet != null ? pet.tipoPet : 'Não Informado'}"
+                                    th:text="${pet.nomePet}"></option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="tipoPet">Espécie</label>
-                        <select id="tipoPet" name="tipoPet" required>
-                            <option value="cao">Cão</option>
-                            <option value="gato">Gato</option>
-                        </select>
+                        <input type="text" id="tipoPet" name="tipoPet" readonly placeholder="Selecionado automaticamente" style="background-color: #f1f5f9;">
                     </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(meusPets)}" style="padding: 20px; background-color: #fef3c7; color: #d97706; border-radius: 12px; font-size: 1rem; margin-bottom: 20px; border: 1px solid #fde68a; text-align: center;">
+                    ⚠️ Você ainda não cadastrou nenhum pet no seu perfil! <br><br>
+                    <a th:href="@{/cliente/cadastrar-pet}" class="btn-submit" style="text-decoration: none; display: inline-block; width: auto; padding: 10px 20px; font-size: 0.9rem; margin-top: 0;">🐾 Cadastrar Meu Primeiro Pet</a>
                 </div>
 
                 <h2 class="section-title">📅 Serviço e Horário</h2>
@@ -104,9 +121,10 @@
                     <div class="form-group full-width">
                         <label for="servico">Serviço Desejado</label>
                         <select id="servico" name="servico" required>
-                            <option value="banho">Banho</option>
-                            <option value="tosa">Tosa</option>
-                            <option value="completo">Combo Completo</option>
+                            <option value="banho">Banho - R$ 50</option>
+                            <option value="tosa">Tosa Higienica - R$ 70</option>
+                            <option value="tosa">Tosa Completa - R$ 90</option>
+                            <option value="completo">Combo Completo (Banho + Tosa) - R$ 110</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -129,11 +147,11 @@
                     <input type="tel" id="telefone" name="telefone" placeholder="(61) 99999-9999" required>
                 </div>
 
-                <button type="submit" class="btn-submit">CONFIRMAR AGENDAMENTO</button>
+                <button type="submit" class="btn-submit" th:if="${!#lists.isEmpty(meusPets)}">CONFIRMAR AGENDAMENTO!</button>
             </form>
         </main>
 
-        <a th:href="@{/}" class="btn-back">← Voltar para o início</a>
+        <a th:href="@{/cliente/dashboard}" class="btn-back">← Voltar para o painel</a>
     </div>
 
 </body>

@@ -26,6 +26,7 @@
             <nav class="nav-links">
                 <a th:href="@{/admin/dashboard}">📈 Visão Geral</a>
                 <a th:href="@{/admin/agenda}">📅 Agenda do Dia</a>
+                <a th:href="@{/admin/historico}">📜 Histórico Geral</a>
                 <a th:href="@{/admin/clientes-pets}" class="active">🐾 Clientes & Pets</a>
             </nav>
         </div>
@@ -40,24 +41,30 @@
         
         <br>
         <div class="card-table">
-            <table>
+            <table th:if="${!#lists.isEmpty(listaPets)}">
                 <thead>
                     <tr>
                         <th>Tutor (Cliente)</th>
-                        <th>WhatsApp</th>
                         <th>Nome do Pet</th>
-                        <th>Espécie/Raça</th>
+                        <th>Espécie</th>
+                        <th>Raça / Porte</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><strong>Maira Luiza</strong></td>
-                        <td>(61) 99999-9999</td>
-                        <td>Thor</td>
-                        <td>🐶 Cão (Vira-lata)</td>
+                    <tr th:each="pet : ${listaPets}">
+                        <td><strong th:text="${pet.nomeTutor}">Maira Luiza</strong></td>
+                        <td th:text="${pet.nomePet}">Thor</td>
+                        <td>
+                            <span th:text="${#strings.equalsIgnoreCase(pet.tipoPet, 'gato') ? '🐱 ' : '🐶 '} + ${pet.tipoPet}">Cão</span>
+                        </td>
+                        <td th:text="${pet.raca} + ' (' + ${pet.porte} + ')'">Vira-lata (Médio)</td>
                     </tr>
                 </tbody>
             </table>
+
+            <div th:if="${#lists.isEmpty(listaPets)}" style="text-align: center; padding: 30px; color: #64748b;">
+                <p style="font-size: 1.1rem;">Nenhum cliente ou pet cadastrado na base de dados ainda! 🐾</p>
+            </div>
         </div>
     </main>
 
