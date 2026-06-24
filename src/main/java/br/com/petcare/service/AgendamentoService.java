@@ -29,16 +29,21 @@ public class AgendamentoService {
     }
 
     // Busca os agendamentos do dia atual para a agenda do petshop
-public List<agendamento> listarAgendamentosDeHoje() {
-    // CORRIGIDO: Nome da variável tudo junto (hojeFormatada)
-    String hojeFormatada = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    return agendamentoRepository.findByDataOrderByHorarioAsc(hojeFormatada);
-}
+    public List<agendamento> listarAgendamentosDeHoje() {
+        String hojeFormatada = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return agendamentoRepository.findByDataOrderByHorarioAsc(hojeFormatada);
+    }
+
     // Altera o status do agendamento (usado pelo petshop na tela da agenda)
     public void atualizarStatus(Long id, String novoStatus) {
         agendamentoRepository.findById(id).ifPresent(agenda -> {
             agenda.setStatus(novoStatus);
             agendamentoRepository.save(agenda);
         });
+    }
+
+    // ADICIONADO: Busca absolutamente todos os registros para o histórico do admin
+    public List<agendamento> listarTodos() {
+        return agendamentoRepository.findAll();
     }
 }
