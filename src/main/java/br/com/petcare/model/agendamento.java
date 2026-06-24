@@ -26,6 +26,10 @@ public class agendamento {
     // Adicionamos o status com um valor padrão para novos agendamentos
     private String status = "PENDENTE"; 
 
+    // NOVOS CAMPOS: Para salvar a opção de TaxiDog e o endereço de busca
+    private String tipoEntrega; 
+    private String enderecoTaxi;
+
     public agendamento() {}
 
     // GETTERS E SETTERS
@@ -55,4 +59,10 @@ public class agendamento {
     // Getters e Setters do Status adicionados
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    // GETTERS E SETTERS ADICIONADOS PARA O TAXIDOG
+    public String getTipoEntrega() { return tipoEntrega; }
+    public void setTipoEntrega(String tipoEntrega) { this.tipoEntrega = tipoEntrega; }
+    public String getEnderecoTaxi() { return enderecoTaxi; }
+    public void setEnderecoTaxi(String enderecoTaxi) { this.enderecoTaxi = enderecoTaxi; }
 }

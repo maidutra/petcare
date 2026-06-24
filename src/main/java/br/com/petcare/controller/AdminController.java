@@ -40,21 +40,28 @@ public class AdminController {
         long totalPetsClientes = petRepository.count();
         model.addAttribute("novosClientes", totalPetsClientes);
 
-        // 4. TABELA DE PREÇOS ATUALIZADA: Mapeamento defensivo baseado no agendamento.html
+        // 4. TABELA DE PREÇOS ATUALIZADA: Mapeamento defensivo + Taxa de TaxiDog inclusa
         double faturamentoPrevisto = hoje.stream().mapToDouble(a -> {
-            if (a.getServico() == null) return 50.0;
+            double valorServico = 50.0; // Valor padrão (Banho)
             
-            String servico = a.getServico().toLowerCase();
-            
-            if (servico.contains("combo") || servico.contains("completo")) {
-                return 110.0; // Combo Completo (Banho + Tosa) - R$ 110
-            } else if (servico.contains("tosa") && servico.contains("completa")) {
-                return 90.0;  // Tosa Completa - R$ 90
-            } else if (servico.contains("tosa") || servico.contains("higienica") || servico.contains("higiênica")) {
-                return 70.0;  // Tosa Higiênica - R$ 70
+            if (a.getServico() != null) {
+                String servico = a.getServico().toLowerCase();
+                
+                if (servico.contains("combo") || servico.contains("completo")) {
+                    valorServico = 110.0; // Combo Completo - R$ 110
+                } else if (servico.contains("tosa") && servico.contains("completa")) {
+                    valorServico = 90.0;  // Tosa Completa - R$ 90
+                } else if (servico.contains("tosa") || servico.contains("higienica") || servico.contains("higiênica")) {
+                    valorServico = 70.0;  // Tosa Higiênica - R$ 70
+                }
             }
             
-            return 50.0; // Banho Padrão - R$ 50
+            // MODIFICADO: Se o agendamento usar TaxiDog, adiciona os R$ 5,00 extras
+            if ("TAXI".equals(a.getTipoEntrega())) {
+                valorServico += 5.0;
+            }
+            
+            return valorServico;
         }).sum();
         model.addAttribute("faturamento", faturamentoPrevisto);
 
