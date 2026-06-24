@@ -42,8 +42,13 @@ public class AgendamentoService {
         });
     }
 
-    // ADICIONADO: Busca absolutamente todos os registros para o histórico do admin
+    // Busca absolutamente todos os registros para o histórico do admin
     public List<agendamento> listarTodos() {
         return agendamentoRepository.findAll();
+    }
+
+    // ADICIONADO: Busca os agendamentos de uma data específica qualquer enviada pelo calendário
+    public List<agendamento> listarPorData(String data) {
+        return agendamentoRepository.findByDataOrderByHorarioAsc(data);
     }
 }

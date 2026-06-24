@@ -1,5 +1,7 @@
 package br.com.petcare.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.petcare.model.Pet;
 import br.com.petcare.model.agendamento;
@@ -56,7 +59,7 @@ public class AdminController {
                 }
             }
             
-            // MODIFICADO: Se o agendamento usar TaxiDog, adiciona os R$ 5,00 extras
+            // Se o agendamento usar TaxiDog, adiciona os R$ 5,00 extras
             if ("TAXI".equals(a.getTipoEntrega())) {
                 valorServico += 5.0;
             }
@@ -68,10 +71,23 @@ public class AdminController {
         return "admin/dashboard";
     }
 
+    // MODIFICADO: Agora aceita o parâmetro "?data=AAAA-MM-DD" vindo do calendário HTML
     @GetMapping("/agenda")
-    public String verAgenda(Model model) {
-        List<agendamento> todosAgendamentos = agendamentoService.listarAgendamentosDeHoje();
+    public String verAgenda(@RequestParam(value = "data", required = false) String dataEscolhida, Model model) {
+        String dataFiltro;
+        
+        // Se nenhuma data foi clicada no calendário, assume o dia de hoje por padrão
+        if (dataEscolhida == null || dataEscolhida.isEmpty()) {
+            dataFiltro = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        } else {
+            dataFiltro = dataEscolhida;
+        }
+        
+        // Busca os agendamentos da data específica recebida
+        List<agendamento> todosAgendamentos = agendamentoService.listarPorData(dataFiltro);
+        
         model.addAttribute("todosAgendamentos", todosAgendamentos);
+        model.addAttribute("dataSelecionada", dataFiltro); // Mantém a data ativa no seletor HTML
         return "admin/agenda";
     }
 

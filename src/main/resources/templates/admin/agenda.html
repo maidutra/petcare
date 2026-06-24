@@ -98,7 +98,11 @@
                 <h1>Controle da Agenda 🗓️</h1>
                 <p>Gerencie a fila de serviços e horários do petshop.</p>
             </div>
-            <input type="date" class="status-select" style="font-size: 1rem; padding: 10px;" th:value="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+            <input type="date" 
+                   class="status-select" 
+                   style="font-size: 1rem; padding: 10px;" 
+                   th:value="${dataSelecionada}" 
+                   onchange="window.location.href='/admin/agenda?data=' + this.value">
         </div>
 
         <div class="agenda-container">
@@ -125,7 +129,7 @@
                         
                         <div th:if="${agenda.tipoEntrega == 'TAXI'}" 
                              style="margin-top: 8px; padding: 10px; background-color: #fffbeb; border-left: 4px solid #d97706; border-radius: 6px; font-size: 0.85rem; color: #b45309; font-weight: 500;">
-                            🚖 **SERVIÇO DE TAXIDOG ATIVO** <br>
+                            🚖 SERVIÇO DE TAXIDOG ATIVO <br>
                             📍 Buscar em: <span th:text="${agenda.enderecoTaxi}">Endereço não preenchido</span>
                         </div>
                     </div>
@@ -137,13 +141,13 @@
 
                         <div>
                             <a th:if="${agenda.status == 'PENDENTE'}" 
-                               th:href="@{/admin/agenda/confirmar/{id}(id=${agenda.id})}" 
+                               th:href="@{/admin/agenda/confirmar/{id}(id=${agenda.id}, data=${dataSelecionada})}" 
                                class="btn-action btn-start">
                                 Iniciar 🧼
                             </a>
                             
                             <a th:if="${agenda.status == 'CONFIRMADO'}" 
-                               th:href="@{/admin/agenda/finalizar/{id}(id=${agenda.id})}" 
+                               th:href="@{/admin/agenda/finalizar/{id}(id=${agenda.id}, data=${dataSelecionada})}" 
                                class="btn-action btn-finish">
                                 Finalizar 🏁
                             </a>
